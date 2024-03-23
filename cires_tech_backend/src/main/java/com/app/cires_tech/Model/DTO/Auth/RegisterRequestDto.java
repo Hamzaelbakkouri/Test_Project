@@ -25,6 +25,7 @@ public class RegisterRequestDto {
 
     @NotNull(message = "userName name cannot be null")
     @Size(max = 40, message = "username is too long")
+    @Column(unique = true)
     String username;
 
     @NotNull(message = "Email cannot be null")
@@ -62,5 +63,6 @@ public class RegisterRequestDto {
     String jobPosition;
 
     @NotEmpty(message = "mobile cannot be empty")
+    @Column(unique = true)
     String mobile;
 }

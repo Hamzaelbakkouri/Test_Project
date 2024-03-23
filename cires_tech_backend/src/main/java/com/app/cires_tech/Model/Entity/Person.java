@@ -1,6 +1,7 @@
 package com.app.cires_tech.Model.Entity;
 
 import com.app.cires_tech.Model.Enums.Role;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -28,8 +29,11 @@ public class Person implements UserDetails {
     private String avatar;
     private String company;
     private String jobPosition;
+    @Column(unique = true)
     private String mobile;
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String password;
     private Role role;
@@ -46,7 +50,7 @@ public class Person implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return username;
     }
 
     @Override

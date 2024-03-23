@@ -1,6 +1,6 @@
 package com.app.cires_tech.Service.Implementation;
 
-import champ.fish.Aftas.Exeptions.NotFoundExeption;
+import com.app.cires_tech.Exeptions.NotFoundExeption;
 import com.app.cires_tech.Model.DTO.Auth.AuthenticationRequestDto;
 import com.app.cires_tech.Model.DTO.Auth.AuthenticationResponseDto;
 import com.app.cires_tech.Model.DTO.Auth.RegisterRequestDto;
@@ -82,18 +82,18 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
+                            request.getUsername(),
                             request.getPassword()
                     )
             );
         } catch (BadCredentialsException ex) {
-            log.error("Authentication failed for user: {}", request.getEmail(), ex);
+            log.error("Authentication failed for user: {}", request.getUsername(), ex);
             throw new BadCredentialsException("Invalid credentials");
         } catch (AuthenticationException ex) {
-            log.error("Authentication failed for user: {}", request.getEmail(), ex);
+            log.error("Authentication failed for user: {}", request.getUsername(), ex);
             throw new ResourceNotFoundException("Authentication failed");
         }
-        var user = personRepository.findByEmail(request.getEmail())
+        var user = personRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -133,7 +133,7 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUserName(refreshToken);
         if (userEmail != null) {
-            var user = this.personRepository.findByEmail(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -152,14 +152,14 @@ public class AuthenticationService {
         String jwt = token.substring(7);
         var userEmail = jwtService.extractUserName(jwt);
         if (userEmail != null) {
-            var user = this.personRepository.findByEmail(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
             return jwtService.isTokenValid(jwt, user);
         }
         return false;
     }
 
     public Profile getUser(String name) {
-        Person user = personRepository.findByEmail(name).orElseThrow(() -> new NotFoundExeption("User not found"));
+        Person user = personRepository.findByUsername(name).orElseThrow(() -> new NotFoundExeption("User not found"));
         return modelMapper.map(user, Profile.class);
     }
 }

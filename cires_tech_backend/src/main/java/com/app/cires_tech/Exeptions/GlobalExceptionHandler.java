@@ -1,4 +1,4 @@
-package champ.fish.Aftas.Exeptions;
+package com.app.cires_tech.Exeptions;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;

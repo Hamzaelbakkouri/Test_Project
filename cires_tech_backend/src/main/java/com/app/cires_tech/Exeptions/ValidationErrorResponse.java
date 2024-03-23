@@ -1,4 +1,4 @@
-package champ.fish.Aftas.Exeptions;
+package com.app.cires_tech.Exeptions;
 
 import lombok.Data;
 
