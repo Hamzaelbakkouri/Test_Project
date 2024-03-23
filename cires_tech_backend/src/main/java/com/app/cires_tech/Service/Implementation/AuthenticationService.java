@@ -77,7 +77,6 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder().accessToken(jwtToken).build();
     }
 
-
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         try {
             authenticationManager.authenticate(

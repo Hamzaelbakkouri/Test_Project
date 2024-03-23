@@ -35,7 +35,9 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui.html",
-            "/h2-console/**"
+            "/h2-console/**",
+            "/api/users/**",
+            "/api/users"
     };
 
     private static final String[] ALLOW_ORIGINS = {
