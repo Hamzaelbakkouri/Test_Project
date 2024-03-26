@@ -28,13 +28,13 @@ import java.util.Arrays;
 public class SecurityConfiguration {
     private static final String[] URLS = {
             "/api/auth/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/v3/api-docs/**",
             "/webjars/**",
-            "/swagger-ui.html",
             "/h2-console/**",
             "/api/users/**",
             "/api/users"

@@ -1,12 +1,13 @@
 package com.app.cires_tech.Model.DTO.Person;
 
 import com.app.cires_tech.Model.Enums.Role;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 public class Profile implements Serializable {
     private String firstName;
     private String lastName;
-    private LocalDate birthday;
+    private Date birthday;
     private String city;
     private String country;
     private String avatar;

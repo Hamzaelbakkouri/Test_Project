@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +24,7 @@ public class Person implements UserDetails {
     private UUID id;
     private String firstName;
     private String lastName;
-    private LocalDate birthday;
+    private Date birthday;
     private String city;
     private String country;
     private String avatar;

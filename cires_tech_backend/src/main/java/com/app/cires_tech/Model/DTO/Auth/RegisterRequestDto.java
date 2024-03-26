@@ -1,18 +1,18 @@
 package com.app.cires_tech.Model.DTO.Auth;
 
+import com.app.cires_tech.Model.Enums.Role;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RegisterRequestDto {
 
     @Size(max = 30, message = "Last name is too long")
@@ -40,7 +40,7 @@ public class RegisterRequestDto {
 
     @Past(message = "birthday must be in the past")
     @NotNull(message = "birthday cannot be null")
-    LocalDate birthday;
+    Date birthday;
 
     @NotNull(message = "city cannot be null")
     @NotEmpty(message = "city cannot be empty")
@@ -65,4 +65,6 @@ public class RegisterRequestDto {
     @NotEmpty(message = "mobile cannot be empty")
     @Column(unique = true)
     String mobile;
+
+    Role role;
 }

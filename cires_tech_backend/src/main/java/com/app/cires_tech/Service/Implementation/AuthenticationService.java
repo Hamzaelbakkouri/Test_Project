@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -90,10 +89,10 @@ public class AuthenticationService {
             throw new BadCredentialsException("Invalid credentials");
         } catch (AuthenticationException ex) {
             log.error("Authentication failed for user: {}", request.getUsername(), ex);
-            throw new ResourceNotFoundException("Authentication failed");
+            throw new RuntimeException("Authentication failed");
         }
         var user = personRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -132,7 +131,7 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUserName(refreshToken);
         if (userEmail != null) {
-            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -151,7 +150,7 @@ public class AuthenticationService {
         String jwt = token.substring(7);
         var userEmail = jwtService.extractUserName(jwt);
         if (userEmail != null) {
-            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            var user = this.personRepository.findByUsername(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
             return jwtService.isTokenValid(jwt, user);
         }
         return false;

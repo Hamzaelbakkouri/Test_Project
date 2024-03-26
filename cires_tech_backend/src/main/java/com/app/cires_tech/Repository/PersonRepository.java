@@ -1,6 +1,7 @@
 package com.app.cires_tech.Repository;
 
 import com.app.cires_tech.Model.Entity.Person;
+import com.app.cires_tech.Model.Enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,5 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
     @Query("SELECT p FROM Person p ORDER BY p.country ASC")
     List<Person> findLimitedUsersOrderByCountryAsc(@Param("limit") Integer limit);
 
+    Optional<Person> findByUsernameAndRole(String username, Role role);
 }
