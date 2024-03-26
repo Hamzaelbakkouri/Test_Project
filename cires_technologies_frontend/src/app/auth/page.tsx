@@ -1,80 +1,123 @@
-"use client";
-import React, { useState } from 'react';
-import { MdEmail } from "react-icons/md";
-import { FaKey } from "react-icons/fa";
-import { TextGenerateEffect } from '@/components/paragraph/TextGenerateEffect';
-import { useAuth } from '@/context/userProvider';
+'use client';
+import React, { useEffect } from 'react';
+import * as Auth from "@/Types/User"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { useRouter } from 'next/navigation';
+import Cookies from 'universal-cookie';
+import Login from '@/RESOURCE/login';
 
-require('dotenv').config();
+const LoginForm = () => {
+  const cookie = new Cookies();
 
-const Page = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const auth = useAuth();
-
-  const paragraph = "Kindly input your credentials in order to proceed with the login";
-
-  function validateForm() {
-    let isValid = true;
-
-    if (!email || !email.includes('@')) {
-      setEmailError('Please enter a valid email address');
-      isValid = false;
-    } else {
-      setEmailError('');
-    }
-
-    if (!password || password.length < 6) {
-      setPasswordError('Password must be at least 6 characters long');
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
-
-    return isValid;
-  }
-
-  function submitForm(e: any) {
-    e.preventDefault();
-    console.log();
-    if (validateForm()) {
-      auth?.login(email, password);
+  const { register, handleSubmit, formState: { errors, isLoading } } = useForm<Auth.RequestAuth>();
+  const router = useRouter();
+  useEffect(() => {
+    (async () => {
+      const result = await cookie.get("token");
+      if (result != undefined)
+        router.push("/");
+    })();
+  }, []);
+  const onSubmit: SubmitHandler<Auth.RequestAuth> = async (credentils: Auth.RequestAuth) => {
+    try {
+      const result = (await Login(credentils)).data;
+      console.log(result.token);
+      document.cookie = `token=${result.token}; path=/`
+      router.push("/");
+    } catch (error: any) {
+      alert("catch")
     }
   }
 
   return (
-    <div className='w-full h-[90vh] flex justify-center items-center'>
-      <form onSubmit={submitForm} className='bg-[#1E1F24] h-[55%] w-[50%] rounded-md py-14 px-7 border border-gray-600 flex flex-col'>
-        <div className='flex flex-col justify-start w-full items-center'>
-          <h3 className='text-3xl font-bold uppercase text-[#45a3fce3] rounded-lg bg-[#1f2024]'>Sign In</h3>
-          <small className='text-lg p-5'><TextGenerateEffect className='text-[#848892]' words={paragraph} /></small>
+    <div>
+      {/* <h2>Login</h2>
+      <form >
+        <div>
+          <label>
+            Email:
+            <input  />
+          </label>
         </div>
-        <div className='flex justify-center pb-8 pt-3'>
-          <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-7 pointer-events-none">
-              <MdEmail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+        <div>
+          <label>
+            Password:
+            <input type="password"  />
+            
+          </label>
+        </div>
+        <button type="submit">Login</button>
+      </form> */}
+
+      <div className="h-screen flex">
+        <div className="flex-1 flex flex-col justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="w-full max-w-sm lg:w-96">
+            <div>
+
+              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
             </div>
-            <input type="email" id="default-search" value={email} onChange={(e) => setEmail(e.target.value)} className="block w-full px-28 py-3 text-sm text-gray-900 border font-semibold border-gray-300 rounded-lg bg-gray-50  dark:bg-[#27292F] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white " placeholder="Email" />
-            <small className='absolute text-red-700 pl-2'>{emailError}</small>
+
+            <div className="mt-8">
+              <div className="mt-6">
+                <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email address
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        {...register("username", { required: "username is required" })}
+                        id="email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                      />
+                      {errors.username && <p className="text-red-500 text-[12px]">{errors.username?.message}</p>}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                      Password
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        {...register("password", { required: "password is required" })}
+                        id="password"
+                        name="password"
+                        type="password"
+                        autoComplete="current-password"
+                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                      />
+                      {errors.password && <p className="text-red-500 text-[12px]">{errors.password?.message}</p>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <button
+
+                      type="submit"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Sign in
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-        <div className='flex justify-center'>
-          <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-7 pointer-events-none">
-              <FaKey className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            </div>
-            <input type="password" id="default-search" value={password} onChange={(e) => setPassword(e.target.value)} className="block w-full px-28 py-3 text-sm font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50  dark:bg-[#27292F] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white " placeholder="Password" />
-            <small className='absolute text-red-700 pl-2'>{passwordError}</small>
-          </div>
+        <div className="hidden lg:block relative w-0 flex-1">
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+            alt=""
+          />
         </div>
-        <button type='submit' className='relative flex justify-center uppercase cursor-pointer py-3 mt-4'>
-          <p className='px-12 py-3 bg-[#45a3fce3] hover:bg-[#33628de3] rounded-lg font-semibold'>ENTER</p>
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
 
-export default Page;
+export default LoginForm;
