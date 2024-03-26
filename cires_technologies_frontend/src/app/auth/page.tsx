@@ -50,17 +50,17 @@ const LoginForm = () => {
       </form> */}
 
       <div className="h-screen flex">
-        <div className="flex-1 flex flex-col justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-          <div className="w-full max-w-sm lg:w-96">
+        <div className="flex-1 flex flex-col bg-[#1E1F24] justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+          <div className="w-full max-w-sm lg:w-96 ">
             <div>
-              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+              <h2 className="mt-6 text-3xl font-extrabold text-white">Sign in to your account</h2>
             </div>
 
             <div className="mt-8">
               <div className="mt-6">
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="email" className="block text-sm font-medium text-white">
                       Email address
                     </label>
                     <div className="mt-1">
@@ -76,7 +76,7 @@ const LoginForm = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password" className="block text-sm font-medium text-white">
                       Password
                     </label>
                     <div className="mt-1">

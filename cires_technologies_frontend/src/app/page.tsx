@@ -1,8 +1,13 @@
 'use client'
+import Navbar from "@/components/Navbar";
+// import 
+import { Globe } from "@/components/user/globe";
 
 export default function Home() {
   return (
-    <main className="flex flex-col h-screen">
-    </main>
+    <div className="bg-[#1E1F24]">
+      <Navbar />  
+      <Globe />
+    </div>
   );
 }

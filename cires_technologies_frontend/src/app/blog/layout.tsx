@@ -1,4 +1,5 @@
 'use client'
+import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 
@@ -15,7 +16,7 @@ export default function blogLayout({
             if (await cookie.get("token") != undefined)
                 setLogged(true);
         })();
-    }, []);
+    }, [logged]);
 
     const handleLogout = () => {
         cookie.remove("token");
@@ -24,8 +25,9 @@ export default function blogLayout({
     return (
         <html lang="en">
             <body>
-                <div className="w-full h-screen">
-                    <div className="">
+                <div className="w-full h-screen ">
+                    <Navbar />
+                    <div>
                         {children}
                     </div>
                 </div>

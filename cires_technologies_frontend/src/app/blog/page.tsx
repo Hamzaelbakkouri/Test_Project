@@ -24,8 +24,8 @@ export default function page() {
   }, [paginate]);
 
   return (
-    <div className="w-full flex gap-5 flex-wrap justify-center">
-      <BentoGrid className="max-w-4xl mx-auto">
+    <div className="w-full bg-[#1E1F24] flex gap-5 flex-wrap justify-center">
+      <BentoGrid className="max-w-4xl mx-auto p-4">
         {data?.map((item: any, i: number) => (
           <BentoGridItem
             id={item.id}
