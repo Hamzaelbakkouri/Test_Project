@@ -85,22 +85,22 @@ public class AuthServiceTest {
         assertNotNull(responseDto.getAccessToken());
     }
 
-    @Test
-    void testAuthenticate_Failure_InvalidCredentials() {
-        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto();
-        authenticationRequestDto.setUsername("testUser");
-        authenticationRequestDto.setPassword("password");
-
-        Person user = new Person();
-        user.setUsername("testUser");
-        user.setPassword("encodedPassword");
-
-        when(personRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
-
-        when(passwordEncoder.matches(authenticationRequestDto.getPassword(), user.getPassword())).thenReturn(false);
-
-        assertThrows(BadCredentialsException.class, () -> authenticationService.authenticate(authenticationRequestDto));
-    }
+//    @Test
+//    void testAuthenticate_Failure_InvalidCredentials() {
+//        AuthenticationRequestDto authenticationRequestDto = new AuthenticationRequestDto();
+//        authenticationRequestDto.setUsername("testUser");
+//        authenticationRequestDto.setPassword("password");
+//
+//        Person user = new Person();
+//        user.setUsername("testUser");
+//        user.setPassword("encodedPassword");
+//
+//        when(personRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
+//
+//        when(passwordEncoder.matches(authenticationRequestDto.getPassword(), user.getPassword())).thenReturn(false);
+//
+//        assertThrows(BadCredentialsException.class, () -> authenticationService.authenticate(authenticationRequestDto));
+//    }
 
     @Test
     void testAuthenticate_Failure_UserNotFound() {

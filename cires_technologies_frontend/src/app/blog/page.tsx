@@ -8,20 +8,7 @@ export default function page() {
   const [paginate, setPaginate] = useState(10);
   const [page, setPage] = useState(1);
   const [data, setData] = useState<any>([]);
-  const [logged, setLogged] = useState<boolean>(false);
-
-  const cookie = new Cookies();
-  useEffect(() => {
-    (async () => {
-      if (await cookie.get("token") != undefined)
-        setLogged(true);
-    })();
-  }, []);
   
-  const handleLogout = () => {
-    cookie.remove("token");
-    setLogged(false);
-  }
 
   useEffect(() => {
     (async () => {
