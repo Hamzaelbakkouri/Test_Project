@@ -3,59 +3,44 @@ import React, { useEffect } from 'react';
 import * as Auth from "@/Types/User"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
 import Cookies from 'universal-cookie';
 import { Login } from '@/API/login';
 
-const LoginForm = () => {
+const page = () => {
   const cookie = new Cookies();
 
   const { register, handleSubmit, formState: { errors, isLoading } } = useForm<Auth.RequestAuth>();
   const router = useRouter();
   useEffect(() => {
-    (async () => {
-      const result = await cookie.get("token");
-      if (result != undefined)
-        router.push("/");
-    })();
+    const result = cookie.get("token");
+    if (result)
+      router.push("/blog");
   }, []);
+
   const onSubmit: SubmitHandler<Auth.RequestAuth> = async (credentils: Auth.RequestAuth, e: any) => {
     e.preventDefault();
     try {
       const result = (await Login(credentils)).data;
-      console.log(result.token);
-      router.push("/");
+      if (result.token) {
+        cookie.set("token", result.token);
+        if (cookie.get("token")) {
+          router.push("/blog");
+        }
+      }
     } catch (error: any) {
-      alert("catch")
+      alert("Bad Credentials");
     }
   }
 
   return (
     <div>
-      {/* <h2>Login</h2>
-      <form >
-        <div>
-          <label>
-            Email:
-            <input  />
-          </label>
-        </div>
-        <div>
-          <label>
-            Password:
-            <input type="password"  />
-            
-          </label>
-        </div>
-        <button type="submit">Login</button>
-      </form> */}
-
       <div className="h-screen flex">
         <div className="flex-1 flex flex-col bg-[#1E1F24] justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="w-full max-w-sm lg:w-96 ">
             <div>
               <h2 className="mt-6 text-3xl font-extrabold text-white">Sign in to your account</h2>
             </div>
-
             <div className="mt-8">
               <div className="mt-6">
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -96,7 +81,7 @@ const LoginForm = () => {
                     <button
 
                       type="submit"
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Sign in
                     </button>
@@ -109,7 +94,7 @@ const LoginForm = () => {
         <div className="hidden lg:block relative w-0 flex-1">
           <img
             className="absolute inset-0 h-full w-full object-cover"
-            src="https://images.unsplash.com/photo-1505904267569-f02eaeb45a4c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1908&q=80"
+            src="https://images.pexels.com/photos/861443/pexels-photo-861443.jpeg?auto=compress&cs=tinysrgb&w200"
             alt=""
           />
         </div>
@@ -118,4 +103,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default page;

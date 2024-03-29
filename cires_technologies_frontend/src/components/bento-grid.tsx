@@ -1,10 +1,21 @@
-'use client';
+'use client'
+import { useState, useEffect } from "react";
+import { Level } from "level";
 import { cn } from "@/utils/cn";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import Image from "next/image";
 import { IoMdHeart } from "react-icons/io";
-import { useState } from "react";
-import axios from "axios";
+import Image from "next/image";
+interface BentoGridItemProps {
+    id: string;
+    className?: string;
+    title?: string | React.ReactNode;
+    description?: string | React.ReactNode;
+    header?: string | StaticImport;
+    icon?: React.ReactNode;
+    Liked?: boolean | null;
+}
+
+const db = new Level("likes", { valueEncoding: "json" });
 
 export const BentoGrid = ({
     className,
@@ -25,7 +36,7 @@ export const BentoGrid = ({
     );
 };
 
-export const BentoGridItem = ({
+export const BentoGridItem: React.FC<BentoGridItemProps> = ({
     id,
     className,
     title,
@@ -33,16 +44,40 @@ export const BentoGridItem = ({
     header,
     icon,
     Liked
-}: {
-    id: string;
-    className?: string;
-    title?: string | React.ReactNode;
-    description?: string | React.ReactNode;
-    header?: string | StaticImport;
-    icon?: React.ReactNode;
-    Liked?: boolean;
 }) => {
-    const [like, setLike] = useState(Liked);
+    const [like, setLike] = useState<boolean | null>(Liked ?? null);
+
+    useEffect(() => {
+        loadLikedStatus();
+    }, []);
+
+    const loadLikedStatus = async () => {
+        try {
+            const likedStatus: any = await db.get(id);
+            setLike(likedStatus);
+        } catch (error: any) {
+            if (error.notFound) {
+                console.log("Liked status not found for post ID:", id);
+            } else {
+                console.error("Error loading liked status for post ID:", id, error);
+            }
+        }
+    };
+
+
+    const handleLikeToggle = async () => {
+        try {
+            if (like) {
+                await db.del(id);
+            } else {
+                // @ts-ignore
+                await db.put(id, true);
+            }
+            setLike(!like);
+        } catch (error: any) {
+            console.error("Error toggling like status for post ID:", id, error);
+        }
+    };
 
     return (
         <div
@@ -65,9 +100,9 @@ export const BentoGridItem = ({
                 </div>
                 <div className="flex justify-end items-center">
                     {like ? (
-                        <IoMdHeart className="text-red-500 text-3xl hover:text-4xl transition-all duration-200 cursor-pointer" onClick={() => setLike(!like)} />
+                        <IoMdHeart className="text-red-500 text-3xl hover:text-4xl transition-all duration-200 cursor-pointer" onClick={handleLikeToggle} />
                     ) :
-                        <IoMdHeart className="text-white text-3xl hover:text-4xl transition-all duration-200 cursor-pointer" onClick={() => setLike(!like)} />
+                        <IoMdHeart className="text-white text-3xl hover:text-4xl transition-all duration-200 cursor-pointer" onClick={handleLikeToggle} />
                     }
                 </div>
             </div>
